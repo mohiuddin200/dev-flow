@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 // eslint-disable-next-line camelcase
 import { Inter, Space_Grotesk } from "next/font/google";
+
 import "./globals.css";
+import Navbar from "@/components/ui/navigation/navbar";
+
+import ThemeProvider from "../../context/Theme";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -12,7 +16,6 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "700"],
   subsets: ["latin"],
 });
-
 
 export const metadata: Metadata = {
   title: "DevFlow",
@@ -28,11 +31,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.className} ${spaceGrotesk.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
