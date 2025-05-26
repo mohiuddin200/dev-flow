@@ -1,25 +1,23 @@
-import { model, models, Schema, Types } from "mongoose";
+import { Schema, models, model, Types, Document } from "mongoose";
 
-export interface IVote {
-  author: Types.ObjectId;
-  contentId: Types.ObjectId;
-  contentType: "question" | "answer";
-  voteType: "upvote" | "downvote";
-  createdAt?: Date;
-  updatedAt?: Date;
-}
+ export interface IVote {
+   author: Types.ObjectId;
+   actionId: Types.ObjectId;
+   actionType: string;
+   voteType: string;
+ }
 
-const VoteSchema = new Schema<IVote>(
-  {
-    author: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    contentId: { type: Schema.Types.ObjectId, required: true },
-    contentType: { type: String, enum: ["question", "answer"], required: true },
-    voteType: { type: String, enum: ["upvote", "downvote"], required: true },
-  },
-  {
-    timestamps: true,
-  }
-);
+ export interface IVoteDoc extends IVote, Document {}
+ const VoteSchema = new Schema<IVote>(
+   {
+     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
+     actionId: { type: Schema.Types.ObjectId, required: true },
+     actionType: { type: String, enum: ["question", "answer"], required: true },
+     voteType: { type: String, enum: ["upvote", "downvote"], required: true },
+   },
+   { timestamps: true }
+ );
 
-const Vote = models?.vote || model<IVote>("Vote", VoteSchema);
-export default Vote;
+ const Vote = models?.Vote || model<IVote>("Vote", VoteSchema);
+
+ export default Vote;
