@@ -5,6 +5,8 @@ import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
+import handleError from "@/lib/handlers/error";
+import { ValidationError } from "@/lib/http-errors";
 
 const questions = [
   {
@@ -47,12 +49,26 @@ const questions = [
   },
 ];
 
-interface SearchParams {
+const test = async () => {
+  try {
+    throw new ValidationError({
+      title: ["Required"],
+      tags: ["At least one tag is required"],
+    });
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+interface SearchParams { 
   searchParams: Promise<{ [key: string]: string }>;
 }
 
 const Home = async ({ searchParams }: SearchParams) => {
   const { query = "", filter = "" } = await searchParams;
+
+  const result = await test();
+  console.log(result);
 
   const filteredQuestions = questions.filter((question) => {
     const matchesQuery = question.title
