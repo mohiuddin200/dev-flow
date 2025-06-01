@@ -53,22 +53,21 @@ const test = async () => {
   try {
     throw new ValidationError({
       title: ["Required"],
-      tags: ["At least one tag is required"],
+      tags: ['"JavaScript" is not a valid tag.'],
     });
   } catch (error) {
     return handleError(error);
   }
 };
 
-interface SearchParams { 
+interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 
 const Home = async ({ searchParams }: SearchParams) => {
-  const { query = "", filter = "" } = await searchParams;
+  await test();
 
-  const result = await test();
-  console.log(result);
+  const { query = "", filter = "" } = await searchParams;
 
   const filteredQuestions = questions.filter((question) => {
     const matchesQuery = question.title
