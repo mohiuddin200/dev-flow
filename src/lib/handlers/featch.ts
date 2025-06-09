@@ -34,7 +34,7 @@ export async function fetchHandler<T>(
     ...restOptions,
     headers,
     signal: controller.signal,
-  };
+  }; 
 
   try {
     const response = await fetch(url, config);
