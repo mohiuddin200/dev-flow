@@ -5,14 +5,18 @@ import mongoose from "mongoose";
 import Question from "../../../database/question.model";
 import TagQuestion from "../../../database/tag-question.mode";
 import Tag from "../../../database/tag.model";
-import { ActionResponse, ErrorResponse } from "../../../types/global";
+import {
+  ActionResponse,
+  ErrorResponse,
+  Question as IQuestion,
+} from "../../../types/global";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import { AskQuestionSchema } from "../validation";
 
 export async function createQuestion(
   params: CreateQuestionParams
-): Promise<ActionResponse> {
+): Promise<ActionResponse<IQuestion>> {
   const validationResult = await action({
     params,
     schema: AskQuestionSchema,
@@ -24,7 +28,7 @@ export async function createQuestion(
   }
 
   const { title, content, tags } = validationResult.params!;
-  const userId = validationResult.session?.user?.id;
+  const userId = validationResult?.session?.user?.id;
 
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -32,9 +36,7 @@ export async function createQuestion(
   try {
     const [question] = await Question.create(
       [{ title, content, author: userId }],
-      {
-        session,
-      }
+      { session }
     );
 
     if (!question) {
@@ -47,7 +49,7 @@ export async function createQuestion(
     for (const tag of tags) {
       const existingTag = await Tag.findOneAndUpdate(
         { name: { $regex: new RegExp(`^${tag}$`, "i") } },
-        { $setOnInsert: { name: tag }, $inc: { question: 1 } },
+        { $setOnInsert: { name: tag }, $inc: { questions: 1 } },
         { upsert: true, new: true, session }
       );
 
@@ -67,10 +69,8 @@ export async function createQuestion(
     );
 
     await session.commitTransaction();
-    return {
-      success: true,
-      data: JSON.parse(JSON.stringify(question)),
-    };
+
+    return { success: true, data: JSON.parse(JSON.stringify(question)) };
   } catch (error) {
     await session.abortTransaction();
     return handleError(error) as ErrorResponse;
