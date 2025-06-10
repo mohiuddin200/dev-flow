@@ -6,12 +6,12 @@ import mongoose from "mongoose";
 import { NotFoundError } from "@/lib/http-errors";
 import { SignInSchema, SignUpSchema } from "@/lib/validation";
 
-import { signIn } from "../../../../auth";
-import Account from "../../../../database/account.model";
-import User from "../../../../database/user.model";
-import { ActionResponse, ErrorResponse } from "../../../../types/global";
-import action from "../action";
-import handleError from "../error";
+import { signIn } from "../../../auth";
+import Account from "../../../database/account.model";
+import User from "../../../database/user.model";
+import { ActionResponse, ErrorResponse } from "../../../types/global";
+import action from "../handlers/action";
+import handleError from "../handlers/error";
 
 export async function signUpWithCredentials(
   params: AuthCredentials
@@ -26,8 +26,6 @@ export async function signUpWithCredentials(
 
   const session = await mongoose.startSession();
   session.startTransaction();
-
-  let committed = false; // Track if transaction is committed
 
   try {
     const existingUser = await User.findOne({ email }).session(session);
@@ -62,15 +60,13 @@ export async function signUpWithCredentials(
     );
 
     await session.commitTransaction();
-    committed = true; // Mark as committed
 
     await signIn("credentials", { email, password, redirect: false });
 
     return { success: true };
   } catch (error) {
-    if (!committed) {
-      await session.abortTransaction();
-    }
+    await session.abortTransaction();
+
     return handleError(error) as ErrorResponse;
   } finally {
     await session.endSession();
