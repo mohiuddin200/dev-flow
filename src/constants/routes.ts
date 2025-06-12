@@ -3,10 +3,14 @@ const ROUTES = {
     SIGN_IN: "/sign-in",
     SIGN_UP: "/sign-up",
     ASK_QUESTION: "/ask-question",
-    SIGN_IN_WITH_OAUTH: "/signin-with-oauth",
-    QUESTION: (id: string) => `/questions/${id}`,
+    COLLECTION: "/collection",
+    COMMUNITY: "/community",
+    TAGS: "/tags",
+    TAG: (id: string) => `/tags/${id}`,
     PROFILE: (id: string) => `/profile/${id}`,
-    TAGS: (id: string) => `/tags/${id}`,
+    QUESTION: (id: string) => `/questions/${id}`,
+    JOBS: "/jobs",
+    SIGN_IN_WITH_OAUTH: "/signin-with-oauth",
     NOT_FOUND: "*",
 }
 
