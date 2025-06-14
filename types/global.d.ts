@@ -50,6 +50,5 @@ interface PaginatedSearchParams {
   pageSize?: number;
   query?: string;
   filter?: string;
-  limit?: number;
   sort?: string;
 }

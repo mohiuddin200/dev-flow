@@ -1,9 +1,20 @@
-import React from 'react'
+import React from "react";
 
-const TagsPage = () => {
-  return (
-    <div>TagsPage</div>
-  )
-}
+import { getTags } from "@/lib/actions/tag.action";
 
-export default TagsPage
+const TagsPage = async () => {
+  const { success, data, error } = await getTags({
+    page: 1,
+    pageSize: 10,
+    query: "mongodb",
+  });
+
+  const { tags } = data || {};
+
+  console.log("TAGS", JSON.stringify(tags, null, 2));
+
+  console.log("Tags:", tags);
+  return <div>TagsPage</div>;
+};
+
+export default TagsPage;
