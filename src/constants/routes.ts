@@ -11,7 +11,7 @@ const ROUTES = {
     QUESTION: (id: string) => `/questions/${id}`,
     JOBS: "/jobs",
     SIGN_IN_WITH_OAUTH: "/signin-with-oauth",
-    NOT_FOUND: "*",
+    NOT_FOUND: "/404",
 }
 
 export default ROUTES;

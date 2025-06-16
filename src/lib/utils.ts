@@ -42,7 +42,6 @@ export const getTechDescription = (techName: string) => {
     : `${techName} is a technology or tool widely used in web development, providing valuable features and capabilities.`;
 };
 
-
 export const getDeviconClassName = (techName: string) => {
   const normalizedTechName = techName.replace(/[ .]/g, "").toLowerCase();
 
@@ -73,4 +72,13 @@ export const getTimeStamp = (createdAt: Date) => {
     }
   }
   return "just now";
+};
+
+export const formatNumber = (number: number) => {
+  if (number >= 1000000) {
+    return (number / 1000000).toFixed(1) + "M";
+  } else if (number >= 1000) {
+    return (number / 1000).toFixed(1) + "K";
+  }
+  return number.toString();
 };
