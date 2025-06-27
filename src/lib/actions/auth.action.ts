@@ -9,6 +9,7 @@ import { SignInSchema, SignUpSchema } from "@/lib/validation";
 import { signIn } from "../../../auth";
 import Account from "../../../database/account.model";
 import User from "../../../database/user.model";
+import { AuthCredentials } from "../../../types/action";
 import { ActionResponse, ErrorResponse } from "../../../types/global";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
@@ -110,4 +111,3 @@ export async function signInWithCredentials(
     return handleError(error) as ErrorResponse;
   }
 }
-
