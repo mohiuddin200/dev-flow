@@ -22,6 +22,7 @@ import {
 } from "../../../types/global";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
+import dbConnect from "../mongoose";
 import {
   AskQuestionSchema,
   EditQuestionSchema,
@@ -328,6 +329,25 @@ export async function incrementViews(
     revalidatePath(ROUTES.QUESTION(questionId));
 
     return { success: true, data: { views: question.views } };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getHotQuestions(): Promise<
+  ActionResponse<(IQuestion)[]>
+> {
+  try {
+    await dbConnect();
+
+    const questions = await Question.find()
+      .sort({ views: -1, upvotes: -1 })
+      .limit(5);
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(questions)),
+    };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
