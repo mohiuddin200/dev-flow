@@ -80,3 +80,7 @@ interface GetUserQuestionsParams
 interface GetUserAnswersParams extends PaginatedSearchParams {
   userId: string;
 }
+
+interface GetUsersTagsParams {
+  userId: string;
+}
